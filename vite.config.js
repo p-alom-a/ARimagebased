@@ -6,7 +6,7 @@ import glsl from 'vite-plugin-glsl'
 export default {
     root: 'src/',
     publicDir: '../public/',
-    base: './',
+    base: '/ARimagebased/',
     plugins:
     [
         // Restart server on static/public file change

@@ -1,11 +1,14 @@
 {
   "name": "threejs-journey-exercise",
+  "homepage": "https://p-alom-a.github.io/ARimagebased/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "4.3",
@@ -16,7 +19,10 @@
     "@react-three/drei": "^9.108.1",
     "@react-three/fiber": "^8.16.8",
     "@stitches/react": "^1.2.8",
+    "aframe": "^1.7.1",
+    "gh-pages": "^6.3.0",
     "leva": "^0.9.35",
+    "mind-ar": "^1.2.5",
     "r3f-perf": "^7.2.1",
     "react": "18.3",
     "react-dom": "18.3",
