@@ -7,7 +7,7 @@ export default function App()
         <>
      
             <a-scene
-            mindar-image="imageTargetSrc: /ARimagebased/targets-3.mind;"
+            mindar-image="imageTargetSrc: /ARimagebased/targets-3.mind; maxTrack: 2"
             color-space="sRGB"
             renderer="colorManagement: true, physicallyCorrectLights"
             vr-mode-ui="enabled: false"
