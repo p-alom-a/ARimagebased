@@ -7,7 +7,7 @@ export default function App()
         <>
      
             <a-scene
-            mindar-image="imageTargetSrc: https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/band-example/band.mind;"
+            mindar-image="imageTargetSrc: /ARimagebased/targets-3.mind;"
             color-space="sRGB"
             renderer="colorManagement: true, physicallyCorrectLights"
             vr-mode-ui="enabled: false"
