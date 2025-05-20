@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { MindARThree } from './mindar-image-three.prod.js';
+import { MindARThree } from 'mind-ar/dist/mindar-image-three.prod.js';
+
+
 
 export default function App() {
     const containerRef = useRef(null);
@@ -8,7 +10,7 @@ export default function App() {
     useEffect(() => {
         const mindarThree = new MindARThree({
             container: containerRef.current,
-            imageTargetSrc: "https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.0/examples/image-tracking/assets/card-example/card.mind"
+            imageTargetSrc: "imageTargetSrc: /ARimagebased/targets.mind;"
         });
 
         const {renderer, scene, camera} = mindarThree;
