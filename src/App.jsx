@@ -13,13 +13,12 @@ export default function AutoStartMindAR() {
       mindarThree = new MindARThree({
         container: containerRef.current,
         imageTargetSrc: "https://p-alom-a.github.io/ARimagebased/targets-compteur.mind"
-
       });
 
       const { renderer, scene, camera } = mindarThree;
       const anchor = mindarThree.addAnchor(0);
 
-      // Création d’un plan semi-transparent bleu
+      // Création d'un plan semi-transparent bleu
       const geometry = new THREE.PlaneGeometry(1, 0.55);
       const material = new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.5 });
       const plane = new THREE.Mesh(geometry, material);
