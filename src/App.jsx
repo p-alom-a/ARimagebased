@@ -6,26 +6,44 @@ export default function App() {
     const containerRef = useRef(null);
 
     useEffect(() => {
-        const mindarThree = new MindARThree({
-            container: containerRef.current,
-            imageTargetSrc: "/targets-compteur.mind"
-        });
+        let mindarThree = null;
 
-        const {renderer, scene, camera} = mindarThree;
-        const anchor = mindarThree.addAnchor(0);
-        const geometry = new THREE.PlaneGeometry(1, 0.55);
-        const material = new THREE.MeshBasicMaterial( {color: 0x00ffff, transparent: true, opacity: 0.5} );
-        const plane = new THREE.Mesh( geometry, material );
-        anchor.group.add(plane);
+        const init = async () => {
+            try {
+                mindarThree = new MindARThree({
+                    container: containerRef.current,
+                    imageTargetSrc: "/targets-compteur.mind",
+                    maxTrack: 1,
+                    warmupTolerance: 5,
+                    missTolerance: 5,
+                });
 
-        mindarThree.start();
-        renderer.setAnimationLoop(() => {
-            renderer.render(scene, camera);
-        });
+                const {renderer, scene, camera} = mindarThree;
+                
+                // Attendre que MindAR soit complètement initialisé
+                await mindarThree.start();
+                
+                const anchor = mindarThree.addAnchor(0);
+                const geometry = new THREE.PlaneGeometry(1, 0.55);
+                const material = new THREE.MeshBasicMaterial( {color: 0x00ffff, transparent: true, opacity: 0.5} );
+                const plane = new THREE.Mesh( geometry, material );
+                anchor.group.add(plane);
+
+                renderer.setAnimationLoop(() => {
+                    renderer.render(scene, camera);
+                });
+            } catch (error) {
+                console.error("Erreur lors de l'initialisation de MindAR:", error);
+            }
+        };
+
+        init();
 
         return () => {
-            renderer.setAnimationLoop(null);
-            mindarThree.stop();
+            if (mindarThree) {
+                mindarThree.renderer.setAnimationLoop(null);
+                mindarThree.stop();
+            }
         }
     }, []);
 
