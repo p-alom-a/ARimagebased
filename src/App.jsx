@@ -12,7 +12,7 @@ export default function AutoStartMindAR() {
     async function startAR() {
       mindarThree = new MindARThree({
         container: containerRef.current,
-        imageTargetSrc: "imageTargetSrc: /ARimagebased/targets-compteur.mind;"
+        imageTargetSrc: "/ARimagebased/targets-compteur.mind"
       });
 
       const { renderer, scene, camera } = mindarThree;
