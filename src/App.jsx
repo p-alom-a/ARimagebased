@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
+import {MindARThree} from 'mind-ar/dist/mindar-image-three.prod.js';
 import * as THREE from 'three';
-import { MindARThree } from 'mindar-image-three';
 
 export default function App() {
     const containerRef = useRef(null);
