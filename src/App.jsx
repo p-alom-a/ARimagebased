@@ -7,7 +7,7 @@ export default function App()
         <>
      
             <a-scene
-            mindar-image="imageTargetSrc: /ARimagebased/targets-4.mind;"
+            mindar-image="imageTargetSrc: /ARimagebased/targets-5.mind;"
             color-space="sRGB"
             renderer="colorManagement: true, physicallyCorrectLights"
             vr-mode-ui="enabled: false"
@@ -52,6 +52,17 @@ export default function App()
                 src="#bearModel"
                 animation-mixer
                 ></a-gltf-model>
+            </a-entity>
+
+            <a-entity mindar-image-target="targetIndex: 2">
+                {/* <!-- Cube basique affiché lorsque la cible 2 est détectée --> */}
+                <a-box
+                    position="0 0 0"
+                    rotation="0 45 0"
+                    scale="0.5 0.5 0.5"
+                    color="#4CC3D9"
+                    animation="property: rotation; to: 0 360 0; dur: 2000; easing: linear; loop: true"
+                ></a-box>
             </a-entity>
             </a-scene>
 
