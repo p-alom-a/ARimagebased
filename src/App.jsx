@@ -10,7 +10,7 @@ export default function App() {
     useEffect(() => {
         const mindarThree = new MindARThree({
             container: containerRef.current,
-            imageTargetSrc: "imageTargetSrc: /ARimagebased/targets.mind;"
+            imageTargetSrc: "imageTargetSrc: /ARimagebased/targets-compteur.mind;"
         });
 
         const {renderer, scene, camera} = mindarThree;
