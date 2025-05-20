@@ -18,7 +18,7 @@ export default function App()
                 <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
                 <a-entity mindar-image-target="targetIndex: 0">
                     <a-box 
-                        color="blue" 
+                        color="red" 
                         position="-0.200074  0.147799  0.086576" 
                         width="0.1" 
                         height="0.1" 
