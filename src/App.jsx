@@ -10,20 +10,21 @@ export default function App() {
     if (!sceneRef.current) return;
     
     const sceneEl = sceneRef.current;
-    const arSystem = sceneEl.systems["mindar-image-system"];
     
     // Démarrer le système AR une fois que la scène est prête
     const handleRenderStart = () => {
-      arSystem.start();
+      if (sceneEl.systems["mindar-image-system"]) {
+        sceneEl.systems["mindar-image-system"].start();
+      }
     };
     
     sceneEl.addEventListener('renderstart', handleRenderStart);
     
     // Nettoyer lors du démontage du composant
     return () => {
-      if (arSystem) {
+      if (sceneEl.systems["mindar-image-system"]) {
         sceneEl.removeEventListener('renderstart', handleRenderStart);
-        arSystem.stop();
+        sceneEl.systems["mindar-image-system"].stop();
       }
     };
   }, []);
@@ -32,7 +33,7 @@ export default function App() {
     <>
       <a-scene 
         ref={sceneRef} 
-        mindar-image="imageTargetSrc: /ARimagebased/targets.mind; autoStart: false;" 
+        mindar-image="imageTargetSrc: /targets-compteur.mind; autoStart: false;" 
         vr-mode-ui="enabled: false" 
         device-orientation-permission-ui="enabled: false"
         embedded
