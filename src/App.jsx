@@ -33,7 +33,7 @@ export default function App() {
     <>
       <a-scene 
         ref={sceneRef} 
-        mindar-image="imageTargetSrc: /targets-compteur.mind; autoStart: false;" 
+        mindar-image="imageTargetSrc: /ARimagebased/targets.mind; autoStart: false;" 
         vr-mode-ui="enabled: false" 
         device-orientation-permission-ui="enabled: false"
         embedded
