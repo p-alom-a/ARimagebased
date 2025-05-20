@@ -1,50 +1,40 @@
-import React, { useEffect, useRef } from 'react';
-import { MindARThree } from 'mind-ar/dist/mindar-image-three.prod.js';
-import * as THREE from 'three';
+import 'aframe';
+import 'mind-ar/dist/mindar-image-aframe.prod.js';
+import { useEffect } from "react";
 
-export default function AutoStartMindAR() {
-  const containerRef = useRef(null);
-
+export default function App() {
   useEffect(() => {
-    let mindarThree;
-    let animationId;
-
-    async function startAR() {
-      mindarThree = new MindARThree({
-        container: containerRef.current,
-        imageTargetSrc: "https://p-alom-a.github.io/ARimagebased/targets-compteur.mind"
+    const examplePlane = document.querySelector('#example-plane');
+    if (examplePlane) {
+      examplePlane.addEventListener("click", () => {
+        alert("plane click");
+        // Ajoutez ici votre logique personnalisée
       });
-
-      const { renderer, scene, camera } = mindarThree;
-      const anchor = mindarThree.addAnchor(0);
-
-      // Création d'un plan semi-transparent bleu
-      const geometry = new THREE.PlaneGeometry(1, 0.55);
-      const material = new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.5 });
-      const plane = new THREE.Mesh(geometry, material);
-      anchor.group.add(plane);
-
-      // Démarrer MindAR (lancement automatique)
-      await mindarThree.start();
-
-      // Boucle de rendu Three.js
-      const renderLoop = () => {
-        renderer.render(scene, camera);
-        animationId = requestAnimationFrame(renderLoop);
-      };
-      renderLoop();
     }
-
-    startAR();
-
-    return () => {
-      // Cleanup propre à la sortie du composant
-      if (animationId) cancelAnimationFrame(animationId);
-      if (mindarThree) mindarThree.stop();
-    };
   }, []);
 
   return (
-    <div style={{ width: '100%', height: '100%' }} ref={containerRef} />
+    <>
+      <a-scene mindar-image="imageTargetSrc: /ARimagebased/targets-compteur.mind;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+        <a-camera
+          position="0 0 0"
+          look-controls="enabled: false"
+          cursor="fuse: false; rayOrigin: mouse;"
+          raycaster="objects: .clickable"
+        ></a-camera>
+        <a-entity mindar-image-target="targetIndex: 0">
+          <a-plane
+            id="example-plane"
+            class="clickable"
+            color="blue"
+            opacity="0.5"
+            position="0 0 0"
+            height="0.552"
+            width="1"
+            rotation="0 0 0"
+          ></a-plane>
+        </a-entity>
+      </a-scene>
+    </>
   );
 }
