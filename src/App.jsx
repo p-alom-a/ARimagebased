@@ -6,32 +6,28 @@ export default function App() {
   const sceneRef = useRef(null);
   
   useEffect(() => {
-    // S'assurer que la référence existe
     if (!sceneRef.current) return;
-    
+  
     const sceneEl = sceneRef.current;
-    
-    // Démarrer le système AR une fois que la scène est prête
+  
     const handleRenderStart = () => {
-      // Vérifier que le système AR existe avant de l'utiliser
       const arSystem = sceneEl.systems["mindar-image-system"];
-      if (arSystem) {
+      if (arSystem && typeof arSystem.start === "function") {
         arSystem.start();
       }
     };
-    
-    sceneEl.addEventListener('renderstart', handleRenderStart);
-    
-    // Nettoyer lors du démontage du composant
+  
+    sceneEl.addEventListener("renderstart", handleRenderStart);
+  
     return () => {
-      // La vérification du système devrait être faite au moment du nettoyage
+      sceneEl.removeEventListener("renderstart", handleRenderStart);
       const arSystem = sceneEl.systems["mindar-image-system"];
-      if (arSystem) {
-        sceneEl.removeEventListener('renderstart', handleRenderStart);
-        arSystem.start(); // Arrêter le système AR
+      if (arSystem && typeof arSystem.stop === "function") {
+        arSystem.stop(); // ✅ arrêt correct
       }
     };
   }, []);
+  
   
   return (
     <>
