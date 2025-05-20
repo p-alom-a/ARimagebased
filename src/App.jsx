@@ -2,15 +2,13 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { MindARThree } from 'mind-ar/dist/mindar-image-three.prod.js';
 
-
-
 export default function App() {
     const containerRef = useRef(null);
 
     useEffect(() => {
         const mindarThree = new MindARThree({
             container: containerRef.current,
-            imageTargetSrc: "imageTargetSrc: /ARimagebased/targets-compteur.mind;"
+            imageTargetSrc: "/targets-compteur.mind"
         });
 
         const {renderer, scene, camera} = mindarThree;
@@ -33,7 +31,6 @@ export default function App() {
 
     return (
         <div style={{width: "100%", height: "100%"}} ref={containerRef}>
-            <MindARThree/>
         </div>
     )
 }
