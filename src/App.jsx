@@ -1,54 +1,56 @@
 import React, { useEffect, useRef } from 'react';
-import * as THREE from 'three';
-import { MindARThree } from 'mind-ar/dist/mindar-image-three.prod.js';
+import 'aframe';
+import 'mind-ar/dist/mindar-image-aframe.prod.js';
 
 export default function App() {
-    const containerRef = useRef(null);
-
-    useEffect(() => {
-        let mindarThree = null;
-
-        const init = async () => {
-            try {
-                mindarThree = new MindARThree({
-                    container: containerRef.current,
-                    imageTargetSrc: "/targets-compteur.mind",
-                    maxTrack: 1,
-                    warmupTolerance: 5,
-                    missTolerance: 5,
-                });
-
-                const {renderer, scene, camera} = mindarThree;
-                
-                // Attendre que MindAR soit complètement initialisé
-                await mindarThree.start();
-                
-                const anchor = mindarThree.addAnchor(0);
-                const geometry = new THREE.PlaneGeometry(1, 0.55);
-                const material = new THREE.MeshBasicMaterial( {color: 0x00ffff, transparent: true, opacity: 0.5} );
-                const plane = new THREE.Mesh( geometry, material );
-                anchor.group.add(plane);
-
-                renderer.setAnimationLoop(() => {
-                    renderer.render(scene, camera);
-                });
-            } catch (error) {
-                console.error("Erreur lors de l'initialisation de MindAR:", error);
-            }
-        };
-
-        init();
-
-        return () => {
-            if (mindarThree) {
-                mindarThree.renderer.setAnimationLoop(null);
-                mindarThree.stop();
-            }
-        }
-    }, []);
-
-    return (
-        <div style={{width: "100%", height: "100%"}} ref={containerRef}>
-        </div>
-    )
+  const sceneRef = useRef(null);
+  
+  useEffect(() => {
+    // S'assurer que la référence existe
+    if (!sceneRef.current) return;
+    
+    const sceneEl = sceneRef.current;
+    const arSystem = sceneEl.systems["mindar-image-system"];
+    
+    // Démarrer le système AR une fois que la scène est prête
+    const handleRenderStart = () => {
+      arSystem.start();
+    };
+    
+    sceneEl.addEventListener('renderstart', handleRenderStart);
+    
+    // Nettoyer lors du démontage du composant
+    return () => {
+      if (arSystem) {
+        sceneEl.removeEventListener('renderstart', handleRenderStart);
+        arSystem.stop();
+      }
+    };
+  }, []);
+  
+  return (
+    <>
+      <a-scene 
+        ref={sceneRef} 
+        mindar-image="imageTargetSrc: /ARimagebased/targets.mind; autoStart: false;" 
+        vr-mode-ui="enabled: false" 
+        device-orientation-permission-ui="enabled: false"
+        embedded
+        color-space="sRGB"
+        renderer="colorManagement: true"
+      >
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+        <a-entity mindar-image-target="targetIndex: 0">
+          <a-plane 
+            color="blue" 
+            opacity="0.5" 
+            position="0 0 0" 
+            height="0.552" 
+            width="1" 
+            rotation="0 0 0"
+          ></a-plane>
+        </a-entity>
+      </a-scene>
+    </>
+  );
 }
