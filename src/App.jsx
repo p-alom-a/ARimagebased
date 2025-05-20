@@ -1,62 +1,35 @@
-import 'aframe';
-import 'mind-ar/dist/mindar-image-aframe.prod.js';
-import { useState, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import * as THREE from 'three';
+import { MindARThree } from 'mindar-image-three';
 
 export default function App() {
-    const [showRedCube, setShowRedCube] = useState(false);
+    const containerRef = useRef(null);
 
-    useEffect(() => {
-        const blueCube = document.querySelector('#blueCube');
-        if (blueCube) {
-            blueCube.addEventListener('click', handleCubeClick);
-        }
+  useEffect(() => {
+    const mindarThree = new MindARThree({
+      container: containerRef.current,
+      imageTargetSrc: "https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.0/examples/image-tracking/assets/card-example/card.mind"
+    });
+    const {renderer, scene, camera} = mindarThree;
+    const anchor = mindarThree.addAnchor(0);
+    const geometry = new THREE.PlaneGeometry(1, 0.55);
+    const material = new THREE.MeshBasicMaterial( {color: 0x00ffff, transparent: true, opacity: 0.5} );
+    const plane = new THREE.Mesh( geometry, material );
+    anchor.group.add(plane);
 
-        // Cleanup event listener on component unmount
-        return () => {
-            if (blueCube) {
-                blueCube.removeEventListener('click', handleCubeClick);
-            }
-        };
-    }, []);
+    mindarThree.start();
+    renderer.setAnimationLoop(() => {
+      renderer.render(scene, camera);
+    });
 
-    const handleCubeClick = () => {
-        alert('Clic détecté sur le cube bleu !');
-        setShowRedCube(true);
-    };
+    return () => {
+      renderer.setAnimationLoop(null);
+      mindarThree.stop();
+    }
+  }, []);
 
-    useEffect(() => {
-        if (showRedCube) {
-            alert('État showRedCube mis à jour : ' + showRedCube);
-        }
-    }, [showRedCube]);
-
-    return (
-        <>
-            <a-scene mindar-image="imageTargetSrc: /ARimagebased/targets-compteur.mind;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
-                <a-camera position="0 0 0" look-controls="enabled: false">
-                    <a-cursor></a-cursor>
-                </a-camera>
-                <a-entity mindar-image-target="targetIndex: 0">
-                    <a-box
-                        id="blueCube"
-                        color="blue"
-                        position="-0.200074 0.147799 0.086576"
-                        width="0.1"
-                        height="0.1"
-                        depth="0.02"
-                    ></a-box>
-                    {showRedCube && (
-                        <a-box
-                            id="redCube"
-                            color="red"
-                            position="-0.200074 0.247799 0.086576"
-                            width="0.1"
-                            height="0.1"
-                            depth="0.02"
-                        ></a-box>
-                    )}
-                </a-entity>
-            </a-scene>
-        </>
-    );
+  return (
+    <div style={{width: "100%", height: "100%"}} ref={containerRef}>
+    </div>
+  )
 }
