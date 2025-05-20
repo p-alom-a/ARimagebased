@@ -31,15 +31,8 @@ export default function App() {
   
   return (
     <>
-      <a-scene
-        ref={sceneRef}
-        mindar-image="imageTargetSrc: /ARimagebased/targets.mind; autoStart: false;"
-        vr-mode-ui="enabled: false"
-        device-orientation-permission-ui="enabled: false"
-        embedded
-        color-space="sRGB"
-        renderer="colorManagement: true"
-      >
+ <a-scene mindar-image="imageTargetSrc: /ARimagebased/targets-compteur.mind;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
         <a-entity mindar-image-target="targetIndex: 0">
           <a-plane
