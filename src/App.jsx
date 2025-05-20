@@ -7,7 +7,9 @@ export default function App()
     const [showRedCube, setShowRedCube] = useState(false);
 
     const handleCubeClick = () => {
+        alert('Clic détecté sur le cube bleu !');
         setShowRedCube(true);
+        alert('État showRedCube mis à jour : ' + showRedCube);
     };
 
     return(
@@ -24,6 +26,7 @@ export default function App()
                         events={{
                             click: handleCubeClick
                         }}
+                        cursor="fuse: false; rayOrigin: mouse;"
                     ></a-box>
                     {showRedCube && (
                         <a-box 
