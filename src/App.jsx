@@ -55,7 +55,7 @@ export default function App() {
   return (
     <>
       <a-scene 
-        mindar-image="imageTargetSrc: /ARimagebased/targets-compteur.mind;" 
+        mindar-image="imageTargetSrc: /ARimagebased/targets-book.mind;" 
         vr-mode-ui="enabled: false" 
         device-orientation-permission-ui="enabled: false"
         embedded
