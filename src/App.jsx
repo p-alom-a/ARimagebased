@@ -50,6 +50,8 @@ export default function MultiTargetMindAR() {
           const model = gltf.scene;
           model.scale.set(0.5, 0.5, 0.5);
           model.position.set(0, -0.25, 0);
+          // Rotation pour mettre le modèle à la verticale
+          model.rotation.x = -Math.PI / 2; // Rotation de -90 degrés sur l'axe X
           
           // Ajout du modèle à l'anchor
           anchor2.group.add(model);
