@@ -3,15 +3,23 @@ import 'mind-ar/dist/mindar-image-aframe.prod.js';
 import { useEffect } from "react";
 
 export default function App() {
-  
 
   useEffect(() => {
+    // Enregistrez le composant personnalisé pour gérer les événements de clic et d'intersection
+    AFRAME.registerComponent('handle-click', {
+      init: function () {
+        const el = this.el;
+        el.addEventListener('raycaster-intersect', function (evt) {
+          alert("plane click");
+          // Ajoutez ici votre logique personnalisée
+        });
+      }
+    });
+
+    // Appliquez le composant personnalisé à l'élément du plan
     const examplePlane = document.querySelector('#example-plane');
     if (examplePlane) {
-      examplePlane.addEventListener("click", () => {
-        alert("plane click");
-        // Ajoutez ici votre logique personnalisée
-      });
+      examplePlane.setAttribute('handle-click', '');
     }
   }, []);
 
@@ -22,6 +30,7 @@ export default function App() {
           position="0 0 0"
           look-controls="enabled: false"
         ></a-camera>
+
         <a-entity raycaster="objects: .clickable" cursor></a-entity>
         <a-entity mindar-image-target="targetIndex: 0">
           <a-plane
