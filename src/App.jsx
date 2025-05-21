@@ -3,6 +3,11 @@ import 'mind-ar/dist/mindar-image-aframe.prod.js';
 import { useEffect } from "react";
 
 export default function App() {
+    useEffect(() => {
+        alert('Page chargée !');
+      }, []);
+      
+
   useEffect(() => {
     const examplePlane = document.querySelector('#example-plane');
     if (examplePlane) {
