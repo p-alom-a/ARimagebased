@@ -1,3 +1,13 @@
-.mindar-ui-overlay, .mindar-ui-start {
+/* Masquer tous les éléments UI de MindAR */
+.mindar-ui-overlay,
+.mindar-ui-loading,
+.mindar-ui-scanning,
+.mindar-ui-scanning .inner,
+.mindar-ui-compatibility-notice,
+.mindar-ui-control,
+.mindar-ui-control .mindar-ui-control-start {
   display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 } 

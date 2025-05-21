@@ -1,33 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { MindARThree } from 'mind-ar/dist/mindar-image-three.prod.js';
 import * as THREE from 'three';
-
-// Style CSS pour masquer les éléments d'interface de MindAR
-const hideMindARUIStyle = `
-  /* Masquer tous les éléments UI de MindAR */
-  .mindar-ui-overlay,
-  .mindar-ui-loading,
-  .mindar-ui-scanning,
-  .mindar-ui-scanning .inner,
-  .mindar-ui-compatibility-notice,
-  .mindar-ui-control,
-  .mindar-ui-control .mindar-ui-control-start {
-    display: none !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-  }
-`;
+import './App.css';
 
 export default function AutoStartMindAR() {
   const containerRef = useRef(null);
   
   useEffect(() => {
-    // Ajouter le style CSS pour masquer l'UI de MindAR
-    const styleElement = document.createElement('style');
-    styleElement.innerHTML = hideMindARUIStyle;
-    document.head.appendChild(styleElement);
-    
     let mindarThree;
     let animationId;
     
@@ -140,15 +119,10 @@ export default function AutoStartMindAR() {
         containerRef.current.removeEventListener('click', eventHandlers.handleInteraction);
         containerRef.current.removeEventListener('touchstart', eventHandlers.handleInteraction);
       }
-      
-      // Supprimer le style CSS ajouté
-      if (styleElement && styleElement.parentNode) {
-        styleElement.parentNode.removeChild(styleElement);
-      }
     };
   }, []);
   
   return (
-    <div style={{ width: '100%', height: '100%' }} ref={containerRef} />
+    <div style={{ width: '100vw', height: '100vw' }} ref={containerRef} />
   );
 }
