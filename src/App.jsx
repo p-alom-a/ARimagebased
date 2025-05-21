@@ -38,6 +38,7 @@ export default function MultiTargetMindAR() {
           const korrigan = gltf.scene;
           korrigan.scale.set(1.2, 1.2, 1.2);
           korrigan.position.set(0, -0.25, 0);
+          korrigan.rotation.x = Math.PI / 2;
           
           // Animation du korrigan
           const mixer = new THREE.AnimationMixer(korrigan);
