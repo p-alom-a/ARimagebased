@@ -43,7 +43,16 @@ export default function AutoStartMindAR() {
         const intersects = raycaster.intersectObject(plane);
 
         if (intersects.length > 0) {
-          alert("Vous avez cliqué sur le plan !");
+          // Créer un nouveau plan rouge
+          const redGeometry = new THREE.PlaneGeometry(1, 0.55);
+          const redMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 });
+          const redPlane = new THREE.Mesh(redGeometry, redMaterial);
+          
+          // Positionner le plan rouge à côté du plan bleu
+          redPlane.position.set(1.2, 0, 0); // 1.2 unités à droite du plan bleu
+          
+          // Ajouter le plan rouge au même groupe d'ancrage
+          anchor.group.add(redPlane);
         }
       };
 
