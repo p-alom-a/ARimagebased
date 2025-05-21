@@ -3,10 +3,7 @@ import 'mind-ar/dist/mindar-image-aframe.prod.js';
 import { useEffect } from "react";
 
 export default function App() {
-    useEffect(() => {
-        alert('Page chargée !');
-      }, []);
-      
+  
 
   useEffect(() => {
     const examplePlane = document.querySelector('#example-plane');
@@ -24,7 +21,7 @@ export default function App() {
         <a-camera
           position="0 0 0"
           look-controls="enabled: false"
-          cursor="fuse: false; rayOrigin: mouse;"
+          cursor="fuse: false; rayOrigin: cursor;"
           raycaster="objects: .clickable"
         ></a-camera>
         <a-entity mindar-image-target="targetIndex: 0">
