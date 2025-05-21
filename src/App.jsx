@@ -52,7 +52,7 @@ export default function MultiTargetMindAR() {
           model.position.set(0, -0.25, 0);
           // Rotation pour mettre le modèle à la verticale dans le bon sens et face à la caméra
           model.rotation.x = Math.PI / 2; // Rotation de 90 degrés sur l'axe X
-          model.rotation.y = Math.PI; // Rotation de 180 degrés sur l'axe Y pour faire face à la caméra
+      
           
           // Ajout du modèle à l'anchor
           anchor2.group.add(model);
