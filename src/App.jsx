@@ -1,16 +1,44 @@
 import React, { useEffect, useRef } from 'react';
 import { MindARThree } from 'mind-ar/dist/mindar-image-three.prod.js';
 import * as THREE from 'three';
-import './App.css';
+
+// Style CSS pour masquer les éléments d'interface de MindAR
+const hideMindARUIStyle = `
+  /* Masquer tous les éléments UI de MindAR */
+  .mindar-ui-overlay,
+  .mindar-ui-loading,
+  .mindar-ui-scanning,
+  .mindar-ui-scanning .inner,
+  .mindar-ui-compatibility-notice,
+  .mindar-ui-control,
+  .mindar-ui-control .mindar-ui-control-start {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+`;
 
 export default function AutoStartMindAR() {
   const containerRef = useRef(null);
-
+  
   useEffect(() => {
+    // Ajouter le style CSS pour masquer l'UI de MindAR
+    const styleElement = document.createElement('style');
+    styleElement.innerHTML = hideMindARUIStyle;
+    document.head.appendChild(styleElement);
+    
     let mindarThree;
     let animationId;
-
+    
+    // Variable pour stocker les fonctions de gestion des événements
+    // afin de pouvoir les supprimer correctement plus tard
+    const eventHandlers = {
+      handleInteraction: null
+    };
+    
     async function startAR() {
+      // Tentative avec les options standard
       mindarThree = new MindARThree({
         container: containerRef.current,
         imageTargetSrc: "https://p-alom-a.github.io/ARimagebased/targets-book.mind",
@@ -19,10 +47,10 @@ export default function AutoStartMindAR() {
         uiError: false,
         uiStart: false
       });
-
+      
       const { renderer, scene, camera } = mindarThree;
       const anchor = mindarThree.addAnchor(0);
-
+      
       // Création d'un plan semi-transparent bleu
       const geometry = new THREE.PlaneGeometry(1, 0.55);
       const material = new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.5 });
@@ -32,21 +60,25 @@ export default function AutoStartMindAR() {
       plane.userData.clickable = true;
       const raycaster = new THREE.Raycaster();
       const mouse = new THREE.Vector2();
-
+      
       // Fonction pour gérer les interactions (clic et toucher)
-      const handleInteraction = (event) => {
+      eventHandlers.handleInteraction = (event) => {
         // Empêcher le comportement par défaut pour éviter le défilement
         event.preventDefault();
         
         // Obtenir les coordonnées du point d'interaction
         const rect = containerRef.current.getBoundingClientRect();
-        const x = ((event.clientX || event.touches[0].clientX) - rect.left) / rect.width * 2 - 1;
-        const y = -((event.clientY || event.touches[0].clientY) - rect.top) / rect.height * 2 + 1;
+        // Gérer à la fois les événements tactiles et les clics
+        const clientX = event.clientX || (event.touches && event.touches[0] ? event.touches[0].clientX : 0);
+        const clientY = event.clientY || (event.touches && event.touches[0] ? event.touches[0].clientY : 0);
+        
+        const x = (clientX - rect.left) / rect.width * 2 - 1;
+        const y = -(clientY - rect.top) / rect.height * 2 + 1;
         
         mouse.set(x, y);
         raycaster.setFromCamera(mouse, camera);
         const intersects = raycaster.intersectObject(plane);
-
+        
         if (intersects.length > 0) {
           // Créer un nouveau plan rouge
           const redGeometry = new THREE.PlaneGeometry(1, 0.55);
@@ -60,38 +92,62 @@ export default function AutoStartMindAR() {
           anchor.group.add(redPlane);
         }
       };
-
+      
       // Ajouter les écouteurs d'événements pour le clic et le toucher
-      containerRef.current.addEventListener('click', handleInteraction);
-      containerRef.current.addEventListener('touchstart', handleInteraction);
-
+      if (containerRef.current) {
+        containerRef.current.addEventListener('click', eventHandlers.handleInteraction);
+        containerRef.current.addEventListener('touchstart', eventHandlers.handleInteraction);
+      }
+      
       anchor.group.add(plane);
-
-      // Démarrer MindAR (lancement automatique)
-      await mindarThree.start();
-
-      const uiOverlay = containerRef.current.querySelector(".mindar-ui-overlay");
-        if (uiOverlay) {
-             uiOverlay.remove();
-         }
-
-      // Boucle de rendu Three.js
-      const renderLoop = () => {
-        renderer.render(scene, camera);
-        animationId = requestAnimationFrame(renderLoop);
-      };
-      renderLoop();
+      
+      // Force le démarrage automatique après un court délai
+      // pour s'assurer que tout est initialisé correctement
+      setTimeout(async () => {
+        try {
+          // Démarre MindAR
+          await mindarThree.start();
+          
+          // Supprime à nouveau l'UI après le démarrage (pour s'assurer qu'elle reste masquée)
+          const startElements = document.querySelectorAll('.mindar-ui-control, .mindar-ui-control-start');
+          startElements.forEach(el => {
+            el.style.display = 'none';
+            el.style.opacity = '0';
+            el.style.visibility = 'hidden';
+          });
+          
+          // Boucle de rendu Three.js
+          const renderLoop = () => {
+            renderer.render(scene, camera);
+            animationId = requestAnimationFrame(renderLoop);
+          };
+          renderLoop();
+        } catch (error) {
+          console.error("Erreur au démarrage de MindAR:", error);
+        }
+      }, 500);
     }
-
+    
     startAR();
-
+    
     return () => {
       // Cleanup propre à la sortie du composant
       if (animationId) cancelAnimationFrame(animationId);
       if (mindarThree) mindarThree.stop();
+      
+      // Nettoyer les écouteurs d'événements
+      if (containerRef.current && eventHandlers.handleInteraction) {
+        containerRef.current.removeEventListener('click', eventHandlers.handleInteraction);
+        containerRef.current.removeEventListener('touchstart', eventHandlers.handleInteraction);
+      }
+      
+      // Supprimer le style CSS ajouté
+      if (styleElement && styleElement.parentNode) {
+        styleElement.parentNode.removeChild(styleElement);
+      }
     };
   }, []);
-
+  
   return (
     <div style={{ width: '100%', height: '100%' }} ref={containerRef} />
   );
