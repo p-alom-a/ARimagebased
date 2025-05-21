@@ -21,9 +21,8 @@ export default function App() {
         <a-camera
           position="0 0 0"
           look-controls="enabled: false"
-          cursor="fuse: false; rayOrigin: cursor;"
-          raycaster="objects: .clickable"
         ></a-camera>
+        <a-entity raycaster="objects: .clickable" cursor></a-entity>
         <a-entity mindar-image-target="targetIndex: 0">
           <a-plane
             id="example-plane"
