@@ -50,19 +50,15 @@ export default function MultiTargetMindAR() {
           const model = gltf.scene;
           model.scale.set(0.5, 0.5, 0.5);
           model.position.set(0, -0.25, 0);
-          // Rotation pour mettre le modèle à la verticale dans le bon sens
+          // Rotation pour mettre le modèle à la verticale dans le bon sens et face à la caméra
           model.rotation.x = Math.PI / 2; // Rotation de 90 degrés sur l'axe X
+          model.rotation.y = Math.PI; // Rotation de 180 degrés sur l'axe Y pour faire face à la caméra
           
           // Ajout du modèle à l'anchor
           anchor2.group.add(model);
           
-          // Animation de rotation du canard (optionnel)
-          const animate = () => {
-            model.rotation.y += 0.01;
-          };
-          
-          // Ajouter cette fonction d'animation à la boucle de rendu
-          mindarThree.mixer = { update: animate };
+          // Suppression de l'animation de rotation
+          mindarThree.mixer = null;
         },
         (xhr) => {
           console.log((xhr.loaded / xhr.total * 100) + '% chargé');
