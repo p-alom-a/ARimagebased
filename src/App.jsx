@@ -70,6 +70,11 @@ export default function AutoStartMindAR() {
       // Démarrer MindAR (lancement automatique)
       await mindarThree.start();
 
+      const uiOverlay = containerRef.current.querySelector(".mindar-ui-overlay");
+        if (uiOverlay) {
+             uiOverlay.remove();
+         }
+
       // Boucle de rendu Three.js
       const renderLoop = () => {
         renderer.render(scene, camera);
