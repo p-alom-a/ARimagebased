@@ -1,101 +1,79 @@
-import 'aframe';
-import 'mind-ar/dist/mindar-image-aframe.prod.js';
-import { useEffect } from "react";
+import React, { useEffect, useRef } from 'react';
+import { MindARThree } from 'mind-ar/dist/mindar-image-three.prod.js';
+import * as THREE from 'three';
 
-export default function App() {
+export default function AutoStartMindAR() {
+  const containerRef = useRef(null);
+
   useEffect(() => {
-    // Attendre que la scène soit chargée
-    const sceneEl = document.querySelector('a-scene');
-    
-    if (sceneEl) {
-      sceneEl.addEventListener('loaded', function () {
-        // Créer un composant personnalisé pour gérer les clics
-        AFRAME.registerComponent('handle-clicks', {
-          init: function() {
-            const el = this.el;
-            let isIntersecting = false;
-            
-            // Détecter quand le raycaster entre en intersection avec l'objet
-            el.addEventListener('raycaster-intersected', function() {
-              isIntersecting = true;
-              // Animation facultative au survol
-              el.setAttribute('scale', '1.2 1.2 1.2');
-            });
-            
-            // Détecter quand le raycaster quitte l'objet
-            el.addEventListener('raycaster-intersected-cleared', function() {
-              isIntersecting = false;
-              // Retour à l'échelle normale
-              el.setAttribute('scale', '1 1 1');
-            });
-            
-            // Gérer le clic global quand un objet est survolé
-            const handleClick = function() {
-              if (isIntersecting) {
-                alert("plane click");
-                // Votre logique personnalisée ici
-              }
-            };
-            
-            // Écouter les clics sur ordinateur et appareils mobiles
-            document.addEventListener('click', handleClick);
-            document.addEventListener('touchend', handleClick);
-          }
-        });
-        
-        // Attacher le composant à l'élément clickable
-        const examplePlane = document.querySelector('#example-plane');
-        if (examplePlane) {
-          examplePlane.setAttribute('handle-clicks', '');
-        }
+    let mindarThree;
+    let animationId;
+
+    async function startAR() {
+      mindarThree = new MindARThree({
+        container: containerRef.current,
+        imageTargetSrc: "https://p-alom-a.github.io/ARimagebased/targets-book.mind"
       });
-    }
-  }, []);
-  
-  return (
-    <>
-      <a-scene 
-        mindar-image="imageTargetSrc: /ARimagebased/targets-book.mind;" 
-        vr-mode-ui="enabled: false" 
-        device-orientation-permission-ui="enabled: false"
-        embedded
-        renderer="colorManagement: true; physicallyCorrectLights: true;"
-      >
-        <a-camera
-          position="0 0 0"
-          look-controls="enabled: false"
-          raycaster="objects: .clickable; far: 100"
-          cursor="fuse: false; rayOrigin: entity"
-        ></a-camera>
-        
-        <a-entity mindar-image-target="targetIndex: 0">
-          <a-plane
-            id="example-plane"
-            class="clickable"
-            color="blue"
-            opacity="0.5"
-            position="0 0 0"
-            height="0.552"
-            width="1"
-            rotation="0 0 0"
-          ></a-plane>
-        </a-entity>
-      </a-scene>
+
+      const { renderer, scene, camera } = mindarThree;
+      const anchor = mindarThree.addAnchor(0);
+
+      // Création d'un plan semi-transparent bleu
+      const geometry = new THREE.PlaneGeometry(1, 0.55);
+      const material = new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.5 });
+      const plane = new THREE.Mesh(geometry, material);
       
-      <style jsx global>{`
-        body {
-          margin: 0;
-          overflow: hidden;
+      // Ajout de l'événement de clic sur le plan
+      plane.userData.clickable = true;
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+
+      // Fonction pour gérer les interactions (clic et toucher)
+      const handleInteraction = (event) => {
+        // Empêcher le comportement par défaut pour éviter le défilement
+        event.preventDefault();
+        
+        // Obtenir les coordonnées du point d'interaction
+        const rect = containerRef.current.getBoundingClientRect();
+        const x = ((event.clientX || event.touches[0].clientX) - rect.left) / rect.width * 2 - 1;
+        const y = -((event.clientY || event.touches[0].clientY) - rect.top) / rect.height * 2 + 1;
+        
+        mouse.set(x, y);
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObject(plane);
+
+        if (intersects.length > 0) {
+          alert("Vous avez cliqué sur le plan !");
         }
-        .a-canvas {
-          touch-action: none;
-          -webkit-touch-callout: none;
-          -webkit-user-select: none;
-          -moz-user-select: none;
-          -ms-user-select: none;
-          user-select: none;
-        }
-      `}</style>
-    </>
+      };
+
+      // Ajouter les écouteurs d'événements pour le clic et le toucher
+      containerRef.current.addEventListener('click', handleInteraction);
+      containerRef.current.addEventListener('touchstart', handleInteraction);
+
+      anchor.group.add(plane);
+
+      // Démarrer MindAR (lancement automatique)
+      await mindarThree.start();
+
+      // Boucle de rendu Three.js
+      const renderLoop = () => {
+        renderer.render(scene, camera);
+        animationId = requestAnimationFrame(renderLoop);
+      };
+      renderLoop();
+    }
+
+    startAR();
+
+    return () => {
+      // Cleanup propre à la sortie du composant
+      if (animationId) cancelAnimationFrame(animationId);
+      if (mindarThree) mindarThree.stop();
+    };
+  }, []);
+
+  return (
+    <div style={{ width: '100%', height: '100%' }} ref={containerRef} />
   );
 }
