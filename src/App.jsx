@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { MindARThree } from 'mind-ar/dist/mindar-image-three.prod.js';
 import * as THREE from 'three';
 import { useControls } from 'leva';
 
 export default function AutoStartMindAR() {
   const containerRef = useRef(null);
-  const [sphereObj, setSphereObj] = useState(null);
+  const sphereRef = useRef(null);
 
-  // Contrôles Leva pour positionner la sphère
+  // Leva controls
   const { posX, posY, posZ } = useControls('Sphère', {
     posX: { value: 0, min: -2, max: 2, step: 0.01 },
     posY: { value: -0.3, min: -2, max: 2, step: 0.01 },
@@ -17,7 +17,6 @@ export default function AutoStartMindAR() {
   useEffect(() => {
     let mindarThree;
     let animationId;
-    let sphere;
 
     async function startAR() {
       mindarThree = new MindARThree({
@@ -28,20 +27,19 @@ export default function AutoStartMindAR() {
       const { renderer, scene, camera } = mindarThree;
       const anchor = mindarThree.addAnchor(0);
 
-      // Sphère noire
+      // Crée la sphère
       const geometry = new THREE.SphereGeometry(0.05, 32, 32);
       const material = new THREE.MeshBasicMaterial({ color: 0x000000 });
-      sphere = new THREE.Mesh(geometry, material);
+      const sphere = new THREE.Mesh(geometry, material);
+      sphereRef.current = sphere;
       anchor.group.add(sphere);
-      setSphereObj(sphere); // stocke pour mise à jour
 
       await mindarThree.start();
 
-      // Boucle de rendu
       const renderLoop = () => {
-        // Mise à jour de la position depuis Leva
-        if (sphere) {
-          sphere.position.set(posX, posY, posZ);
+        // Met à jour la position avec les valeurs du panneau
+        if (sphereRef.current) {
+          sphereRef.current.position.set(posX, posY, posZ);
         }
 
         renderer.render(scene, camera);
@@ -57,7 +55,7 @@ export default function AutoStartMindAR() {
       if (animationId) cancelAnimationFrame(animationId);
       if (mindarThree) mindarThree.stop();
     };
-  }, [posX, posY, posZ]);
+  }, []); // 👈 se déclenche **une seule fois**
 
   return (
     <div style={{ width: '100%', height: '100%' }} ref={containerRef} />
