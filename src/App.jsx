@@ -11,8 +11,7 @@ export default function App()
           <a-sphere 
             color="black" 
             radius="0.1" 
-            position="0 -0.5 0"
-            animation="property: position; to: 0 0.4 0; dur: 2000; easing: easeOutBounce; delay: 500">
+            position="0 -0.5 0">
           </a-sphere>
         </a-entity>
       </a-scene>
