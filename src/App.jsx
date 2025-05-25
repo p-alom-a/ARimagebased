@@ -30,7 +30,7 @@ function App() {
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
       <ARAnchor target={0}>
-        <Plane />
+        <Plane position={[0, 0.5, 0]} />
       </ARAnchor>
       <ARAnchor target={1}>
         <PlaneTwo />
