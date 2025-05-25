@@ -18,6 +18,7 @@ function PlaneTwo(props) {
         roughness={0} 
         transmission={1} 
         thickness={0.5} 
+        envMap={texture}
       />
     </mesh>
   );
@@ -67,7 +68,22 @@ function App() {
           <Plane />
         </ARAnchor>
         <ARAnchor target={1}>
-          <PlaneTwo />
+        <CubeCamera resolution={256} frames={1}>
+    {(texture) => (
+      <>
+        <mesh>
+          <boxGeometry args={[0.5, 0.5, 0.1]} />
+          <meshPhysicalMaterial
+            color="blue"
+            roughness={0}
+            transmission={1}
+            thickness={0.5}
+            envMap={texture}
+          />
+        </mesh>
+      </>
+    )}
+  </CubeCamera>
         </ARAnchor>
       </ARView>
 
