@@ -1,5 +1,6 @@
 import { ARAnchor, ARView } from "react-three-mind";
 import { Html, OrbitControls } from '@react-three/drei'
+import { Canvas } from '@react-three/fiber'
 
 
 function Plane(props) {
