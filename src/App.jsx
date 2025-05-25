@@ -1,7 +1,8 @@
-import { ARAnchor, ARView } from "react-three-mind";
-import { Html, OrbitControls } from '@react-three/drei'
-import { Canvas } from '@react-three/fiber'
-
+import { ARAnchor, ARView } from "react-three-mind"
+import { useRef, useEffect, useState } from "react"
+import * as THREE from "three"
+import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js"
+import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js"
 
 function Plane(props) {
   return (
@@ -9,53 +10,68 @@ function Plane(props) {
       <boxGeometry args={[1, 1, 0.1]} />
       <meshStandardMaterial color="orange" />
     </mesh>
-  );}
-  
-  function PlaneTwo(props) {
-    return (
-      <mesh {...props}>
-        <boxGeometry args={[0.5, 0.5, 0.1]} />
-        <meshStandardMaterial color="blue" />
-      </mesh>
-    );
-}
-function HtmlHUD() {
-  return (
-    <Canvas
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        pointerEvents: 'none', // Empêche de bloquer les clics sauf sur Html
-      }}
-      camera={{ position: [0, 0, 5] }}
-    >
-      <Html
-        center
-        position={[0, 0, 0]}
-        transform
-        occlude={false}
-        style={{ pointerEvents: 'auto' }}
-      >
-        <button
-          style={{
-            padding: '10px 20px',
-            fontSize: '16px',
-            backgroundColor: '#4CAF50',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-          }}
-          onClick={() => alert('HUD OK cliqué')}
-        >
-          OK
-        </button>
-      </Html>
-    </Canvas>
   )
 }
 
+function Button3D(props) {
+  const meshRef = useRef()
+  const textRef = useRef()
+  const [font, setFont] = useState(null)
+
+  // Charge la police une seule fois
+  useEffect(() => {
+    const loader = new FontLoader()
+    loader.load(
+      "https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
+      (loadedFont) => {
+        setFont(loadedFont)
+      }
+    )
+  }, [])
+
+  // Met à jour la géométrie du texte quand la police est chargée
+  useEffect(() => {
+    if (!font) return
+
+    const geometry = new TextGeometry("OK", {
+      font: font,
+      size: 0.15,
+      height: 0.05,
+      curveSegments: 12,
+      bevelEnabled: false,
+    })
+
+    geometry.center() // Centre le texte
+
+    if (textRef.current) {
+      textRef.current.geometry.dispose()
+      textRef.current.geometry = geometry
+    }
+  }, [font])
+
+  const handleClick = () => {
+    alert("OK cliqué !")
+  }
+
+  return (
+    <group {...props}>
+      {/* Plan bleu cliquable */}
+      <mesh ref={meshRef} onClick={handleClick}>
+        <boxGeometry args={[0.5, 0.5, 0.1]} />
+        <meshStandardMaterial color="blue" />
+      </mesh>
+
+      {/* Texte 3D "OK" */}
+      <mesh
+        ref={textRef}
+        position={[0, 0, 0.1]} // Un peu devant le plan
+      >
+        {/* Géométrie créée dynamiquement */}
+        <meshStandardMaterial color="white" />
+      </mesh>
+    </group>
+  )
+}
 
 function App() {
   return (
@@ -69,14 +85,16 @@ function App() {
     >
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
+
       <ARAnchor target={0}>
-        <Plane position={[0, 0.5, 1]} />
+        <Plane />
       </ARAnchor>
+
       <ARAnchor target={1}>
-        <HtmlHUD />
+        <Button3D />
       </ARAnchor>
     </ARView>
-  );
+  )
 }
 
-export default App;
+export default App
