@@ -39,6 +39,7 @@ function Button3D(props) {
       height: 0.05,
       curveSegments: 12,
       bevelEnabled: false,
+      depth: 1,
     })
 
     geometry.center() // Centre le texte
