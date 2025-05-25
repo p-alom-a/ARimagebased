@@ -9,10 +9,10 @@ importers:
   .:
     dependencies:
       '@react-three/drei':
-        specifier: ^9.108.1
+        specifier: ^9.122.0
         version: 9.122.0(@react-three/fiber@8.18.0(@types/react@19.1.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.150.1))(@types/react@19.1.4)(@types/three@0.176.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.150.1)(use-sync-external-store@1.5.0(react@18.3.1))
       '@react-three/fiber':
-        specifier: ^8.16.8
+        specifier: ^8.18.0
         version: 8.18.0(@types/react@19.1.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.150.1)
       '@stitches/react':
         specifier: ^1.2.8

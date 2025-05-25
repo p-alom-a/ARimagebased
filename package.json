@@ -16,8 +16,8 @@
     "vite-plugin-restart": "^0.4.1"
   },
   "dependencies": {
-    "@react-three/drei": "^9.108.1",
-    "@react-three/fiber": "^8.16.8",
+    "@react-three/drei": "^9.122.0",
+    "@react-three/fiber": "^8.18.0",
     "@stitches/react": "^1.2.8",
     "aframe": "^1.7.1",
     "gh-pages": "^6.3.0",
