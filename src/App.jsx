@@ -1,6 +1,5 @@
 import { ARAnchor, ARView } from "react-three-mind";
-import { Html, OrbitControls } from '@react-three/drei'
-
+import { Html } from '@react-three/drei'
 
 function Plane(props) {
   return (
@@ -8,37 +7,17 @@ function Plane(props) {
       <boxGeometry args={[1, 1, 0.1]} />
       <meshStandardMaterial color="orange" />
     </mesh>
-  );}
-  
-  function PlaneTwo(props) {
-    return (
-      <mesh {...props}>
-        <boxGeometry args={[0.5, 0.5, 0.1]} />
-        <meshStandardMaterial color="blue" />
-      </mesh>
-    );
-}
-function HtmlButton() {
-  return (
-    <Html position={[0, 0, 0]}>
-      <button
-        style={{
-          padding: '10px 20px',
-          fontSize: '16px',
-          backgroundColor: '#4CAF50',
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
-        }}
-        onClick={() => alert('OK cliqué (HTML)!')}
-      >
-        OK
-      </button>
-    </Html>
-  )
+  );
 }
 
+function PlaneTwo(props) {
+  return (
+    <mesh {...props}>
+      <boxGeometry args={[0.5, 0.5, 0.1]} />
+      <meshStandardMaterial color="blue" />
+    </mesh>
+  );
+}
 
 function App() {
   return (
@@ -52,11 +31,29 @@ function App() {
     >
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
+
       <ARAnchor target={0}>
         <Plane position={[0, 0.5, 1]} />
       </ARAnchor>
+
       <ARAnchor target={1}>
-        <HtmlButton />
+        {/* Placer le Html ici, à l'intérieur du Canvas */}
+        <Html position={[0, 0, 0]}>
+          <button
+            style={{
+              padding: '10px 20px',
+              fontSize: '16px',
+              backgroundColor: '#4CAF50',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+            }}
+            onClick={() => alert('OK cliqué (HTML)!')}
+          >
+            OK
+          </button>
+        </Html>
       </ARAnchor>
     </ARView>
   );
