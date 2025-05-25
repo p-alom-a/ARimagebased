@@ -1,5 +1,6 @@
 import { ARAnchor, ARView } from "react-three-mind";
-import { Text, OrbitControls } from '@react-three/drei'
+import { Html, OrbitControls } from '@react-three/drei'
+
 
 function Plane(props) {
   return (
@@ -17,26 +18,24 @@ function Plane(props) {
       </mesh>
     );
 }
-function Button3D() {
+function HtmlButton() {
   return (
-    <group position={[0, 0, 0]}>
-      {/* Le fond du bouton */}
-      <mesh onClick={() => alert('OK cliqué !')}>
-        <boxGeometry args={[2, 1, 0.2]} />
-        <meshStandardMaterial color="#4CAF50" />
-      </mesh>
-
-      {/* Le texte "OK" */}
-      <Text
-        position={[0, 0, 0.15]} // Légèrement au-dessus du bouton
-        fontSize={0.4}
-        color="white"
-        anchorX="center"
-        anchorY="middle"
+    <Html position={[0, 0, 0]}>
+      <button
+        style={{
+          padding: '10px 20px',
+          fontSize: '16px',
+          backgroundColor: '#4CAF50',
+          color: 'white',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer',
+        }}
+        onClick={() => alert('OK cliqué (HTML)!')}
       >
         OK
-      </Text>
-    </group>
+      </button>
+    </Html>
   )
 }
 
@@ -57,7 +56,7 @@ function App() {
         <Plane position={[0, 0.5, 1]} />
       </ARAnchor>
       <ARAnchor target={1}>
-        <Button3D />
+        <HtmlButton />
       </ARAnchor>
     </ARView>
   );
