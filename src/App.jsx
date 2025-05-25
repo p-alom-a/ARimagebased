@@ -1,8 +1,4 @@
-import { ARAnchor, ARView } from "react-three-mind"
-import { useRef, useEffect, useState } from "react"
-import * as THREE from "three"
-import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js"
-import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js"
+import { ARAnchor, ARView } from "react-three-mind";
 
 function Plane(props) {
   return (
@@ -10,69 +6,21 @@ function Plane(props) {
       <boxGeometry args={[1, 1, 0.1]} />
       <meshStandardMaterial color="orange" />
     </mesh>
-  )
-}
-
-function Button3D(props) {
-  const meshRef = useRef()
-  const textRef = useRef()
-  const [font, setFont] = useState(null)
-
-  // Charge la police une seule fois
-  useEffect(() => {
-    const loader = new FontLoader()
-    loader.load(
-      "https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
-      (loadedFont) => {
-        setFont(loadedFont)
-      }
-    )
-  }, [])
-
-  // Met à jour la géométrie du texte quand la police est chargée
-  useEffect(() => {
-    if (!font) return
-
-    const geometry = new TextGeometry("OK", {
-      font: font,
-      size: 0.15,
-      height: 0.05,
-      curveSegments: 12,
-      bevelEnabled: false,
-      depth: 1,
-    })
-
-    geometry.center() // Centre le texte
-
-    if (textRef.current) {
-      textRef.current.geometry.dispose()
-      textRef.current.geometry = geometry
-    }
-  }, [font])
-
-  const handleClick = () => {
-    alert("OK cliqué !")
-  }
-
-  return (
-    <group {...props}>
-      {/* Plan bleu cliquable */}
-      <mesh ref={meshRef} onClick={handleClick}>
+  );}
+  
+  function PlaneTwo(props) {
+    return (
+      <mesh {...props}>
         <boxGeometry args={[0.5, 0.5, 0.1]} />
-        <meshStandardMaterial color="blue" />
+        <meshPhysicalMaterial 
+          color="blue" 
+          roughness={0} 
+          transmission={1} 
+          thickness={0.5} 
+        />
       </mesh>
-
-      {/* Texte 3D "OK" */}
-      <mesh
-        ref={textRef}
-        position={[0, 0, 0.1]} // Un peu devant le plan
-      >
-        {/* Géométrie créée dynamiquement */}
-        <meshStandardMaterial color="white" />
-      </mesh>
-    </group>
-  )
-}
+    );
+  }
 
 function App() {
   return (
@@ -86,16 +34,14 @@ function App() {
     >
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
-
       <ARAnchor target={0}>
         <Plane />
       </ARAnchor>
-
       <ARAnchor target={1}>
-        <Button3D />
+        <PlaneTwo />
       </ARAnchor>
     </ARView>
-  )
+  );
 }
 
-export default App
+export default App;
