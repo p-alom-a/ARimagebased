@@ -18,8 +18,26 @@ export default function AutoStartMindAR() {
       const { renderer, scene, camera } = mindarThree;
       const anchor = mindarThree.addAnchor(0);
 
-      // Matériau Glassmorphism
+      // Création du dégradé selon vos spécifications
+      const canvas = document.createElement('canvas');
+      canvas.width = 256;
+      canvas.height = 256;
+      const context = canvas.getContext('2d');
+
+      const gradient = context.createLinearGradient(0, 0, 256, 0);
+      gradient.addColorStop(0, 'rgba(255, 255, 255, 0.4)'); // 0% - 40% opacity
+      gradient.addColorStop(0.41, 'rgba(255, 255, 255, 0)'); // 41% - 0% opacity  
+      gradient.addColorStop(0.57, 'rgba(255, 255, 255, 0)'); // 57% - 0% opacity
+      gradient.addColorStop(1, 'rgba(255, 255, 255, 0.1)'); // 100% - 10% opacity
+
+      context.fillStyle = gradient;
+      context.fillRect(0, 0, 256, 256);
+
+      const texture = new THREE.CanvasTexture(canvas);
+
+      // Matériau Glassmorphism avec dégradé
       const glassMaterial = new THREE.MeshPhysicalMaterial({
+        map: texture,
         color: 0xffffff,
         metalness: 0.1,
         roughness: 0.1,
@@ -34,11 +52,11 @@ export default function AutoStartMindAR() {
         specularIntensity: 1,
       });
 
-      // Géométrie bouton réduite (bords arrondis)
+      // Géométrie bouton avec épaisseur et border radius 32
       const shape = new THREE.Shape();
-      const radius = 0.05; // Réduit pour s'adapter à la taille du plan original
-      const width = 0.6, height = 0.33; // Proportions similaires au plan (1 x 0.55)
-      
+      const radius = 0.32; // Border radius 32 (adapté à l'échelle)
+      const width = 0.6, height = 0.33;
+
       shape.moveTo(-width / 2 + radius, -height / 2);
       shape.lineTo(width / 2 - radius, -height / 2);
       shape.quadraticCurveTo(width / 2, -height / 2, width / 2, -height / 2 + radius);
@@ -48,8 +66,17 @@ export default function AutoStartMindAR() {
       shape.quadraticCurveTo(-width / 2, height / 2, -width / 2, height / 2 - radius);
       shape.lineTo(-width / 2, -height / 2 + radius);
       shape.quadraticCurveTo(-width / 2, -height / 2, -width / 2 + radius, -height / 2);
-      
-      const geometry = new THREE.ShapeGeometry(shape);
+
+      // Ajout d'épaisseur avec ExtrudeGeometry
+      const extrudeSettings = {
+        depth: 0.05, // Épaisseur de la card
+        bevelEnabled: true,
+        bevelThickness: 0.01,
+        bevelSize: 0.01,
+        bevelSegments: 8
+      };
+      const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+
       const button = new THREE.Mesh(geometry, glassMaterial);
       button.position.set(0, 0, 0);
       anchor.group.add(button);
