@@ -30,9 +30,9 @@ export default function App()
             <a-entity mindar-image-target="targetIndex: 0">
                 {/* <!-- Modèle 3D du raton laveur affiché lorsque la cible 0 est détectée --> */}
                 <a-gltf-model
-                rotation="0 0 0"
+                rotation="0 -90 0"
                 position="0 -0.25 0"
-                scale="0.05 0.05 0.05"
+                scale="1 1 1"
                 src="#maskModel"
                 animation-mixer
                 ></a-gltf-model>
