@@ -7,7 +7,7 @@ export default function App()
         <>
      
             <a-scene
-            mindar-image="imageTargetSrc: /ARimagebased/targets-mask.mind;"
+            mindar-image="imageTargetSrc: https://p-alom-a.github.io/ARimagebased/targets-mask.mind;"
             color-space="sRGB"
             renderer="colorManagement: true, physicallyCorrectLights"
             vr-mode-ui="enabled: false"
@@ -18,7 +18,7 @@ export default function App()
             
                 <a-asset-item
                 id="maskModel"
-                src="./models/maskModel.glb"
+                src="https://p-alom-a.github.io/ARimagebased/models/maskModel.glb"
                 ></a-asset-item>
              
             </a-assets>
