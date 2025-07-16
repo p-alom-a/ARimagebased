@@ -7,7 +7,7 @@ export default function App()
         <>
      
             <a-scene
-            mindar-image="imageTargetSrc: https://p-alom-a.github.io/ARimagebased/targets-mask.mind;"
+            mindar-image="imageTargetSrc: https://p-alom-a.github.io/ARimagebased/targets-mask3.mind; maxTrack: 3"
             color-space="sRGB"
             renderer="colorManagement: true, physicallyCorrectLights"
             vr-mode-ui="enabled: false"
@@ -28,6 +28,26 @@ export default function App()
 
             {/* <!-- Entité AR liée à la première cible d'image (index 0) --> */}
             <a-entity mindar-image-target="targetIndex: 0">
+                {/* <!-- Modèle 3D du raton laveur affiché lorsque la cible 0 est détectée --> */}
+                <a-gltf-model
+                rotation="0 -90 0"
+                position="0 0 0"
+                scale="1 1 1"
+                src="#maskModel"
+                animation-mixer
+                ></a-gltf-model>
+            </a-entity>
+            <a-entity mindar-image-target="targetIndex: 1">
+                {/* <!-- Modèle 3D du raton laveur affiché lorsque la cible 0 est détectée --> */}
+                <a-gltf-model
+                rotation="0 -90 0"
+                position="0 0 0"
+                scale="1 1 1"
+                src="#maskModel"
+                animation-mixer
+                ></a-gltf-model>
+            </a-entity>
+            <a-entity mindar-image-target="targetIndex: 2">
                 {/* <!-- Modèle 3D du raton laveur affiché lorsque la cible 0 est détectée --> */}
                 <a-gltf-model
                 rotation="0 -90 0"
