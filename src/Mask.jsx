@@ -7,7 +7,7 @@ export default function App()
         <>
      
             <a-scene
-            mindar-image="imageTargetSrc: https://p-alom-a.github.io/ARimagebased/targets-mask3.mind; maxTrack: 3"
+            mindar-image="imageTargetSrc: https://p-alom-a.github.io/ARimagebased/targets-maskdetour.mind;"
             color-space="sRGB"
             renderer="colorManagement: true, physicallyCorrectLights"
             vr-mode-ui="enabled: false"
