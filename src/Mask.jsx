@@ -32,7 +32,7 @@ export default function App()
                 <a-gltf-model
                 rotation="0 -90 0"
                 position="0 0 0"
-                scale="1 1 1"
+                scale="1.5 1.5 1.5"
                 src="#maskModel"
                 animation-mixer
                 ></a-gltf-model>
